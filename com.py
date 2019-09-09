@@ -1,5 +1,5 @@
 import random
-import blum_blum_shub
+import bbs
 
 class CommitmentScheme(object):
     def __init__(self, oneWayPermutation, hardcorePredicate, securityParameter):
@@ -99,9 +99,9 @@ class BBSStringCommitmentVerifier(object):
 
 if __name__ == "__main__":
 
-    securityParameter = 10
-    oneWayPerm = blum_blum_shub.blum_blum_shub(securityParameter)
-    hardcorePred = blum_blum_shub.parity
+    securityParameter = 600
+    oneWayPerm = bbs.bbs(securityParameter)
+    hardcorePred = bbs.parity
     scheme = BBSStringCommitmentScheme(100, oneWayPerm, hardcorePred)
     verifier = BBSStringCommitmentVerifier(100, oneWayPerm, hardcorePred)
 

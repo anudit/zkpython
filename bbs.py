@@ -18,7 +18,7 @@ def makeModulus(numBits=512):
 def parity(n):
     return sum(int(x) for x in bin(n)[2:]) % 2
 
-def blum_blum_shub(modulusLength=512):
+def bbs(modulusLength=512):
     modulus = makeModulus(numBits=modulusLength)
 
     def f(inputInt):
@@ -27,6 +27,6 @@ def blum_blum_shub(modulusLength=512):
     return f
 
 if __name__ == "__main__":
-    owp = blum_blum_shub()
+    owp = bbs()
     print(owp(70203203))
     print(owp(12389))
