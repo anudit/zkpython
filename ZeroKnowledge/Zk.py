@@ -1,5 +1,5 @@
 import random
-import bbs
+from ZeroKnowledge import bbs
 
 class CommitmentScheme(object):
     def __init__(self, oneWayPermutation, hardcorePredicate, securityParameter):
@@ -72,8 +72,7 @@ class BBSStringCommitmentScheme(CommitmentScheme):
         return sec
 
     def commit(self, integer):
-        # .zfill(len(self.schemes))
-        binaryString = ''.join("0" + (format(ord(x), 'b')) for x in str(integer))
+        binaryString = ''.join((format(ord(x), 'b').zfill(8)) for x in str(integer))
         bits = [int(char) for char in binaryString]
         return [scheme.commit(bit) for scheme, bit in zip(self.schemes, bits)]
 
@@ -101,20 +100,30 @@ class BBSStringCommitmentVerifier(object):
         chars  = [chr(int(charBin, 2)) for charBin in binarySets]
         return ''.join(chars)
 
-if __name__ == "__main__":
+class Zk():
 
-    securityParameter = 10
-    oneWayPerm = bbs.bbs(securityParameter)
-    hardcorePred = bbs.parity
-    scheme = BBSStringCommitmentScheme(100, oneWayPerm, hardcorePred)
-    verifier = BBSStringCommitmentVerifier(100, oneWayPerm, hardcorePred)
-    # secrets = scheme.reveal()
+    def __init__(self):
+        securityParameter = 10
+        oneWayPerm = bbs.bbs(securityParameter)
+        hardcorePred = bbs.parity
+        self.scheme = BBSStringCommitmentScheme(512, oneWayPerm, hardcorePred)
+        self.verifier = BBSStringCommitmentVerifier(512, oneWayPerm, hardcorePred)
 
-    secrets = [45782, 34856, 9604, 8665, 28702, 37591, 30483, 33756, 9524, 14601, 42310, 6183, 24988, 6204, 3488, 39433, 34766, 46094, 19775, 23875, 40943, 11285, 6183, 24054, 25734, 5223, 6094, 14392, 16113, 43007, 21454, 46200, 17083, 6469, 30745, 20459, 24413, 21196, 16462, 19760, 10746, 42028, 41763, 12019, 42131, 32287, 39827, 4611, 26412, 2678, 38928, 8230, 11994, 1188, 25799, 19533, 30160, 967, 47, 26877, 19551, 12191, 31983, 41621, 22856, 13221, 32849, 29302, 2897, 6893, 5049, 10568, 26756, 1696, 26809, 17845, 47893, 11553, 6838, 31047, 9484, 6599, 34742, 43480, 45195, 31013, 31375, 17183, 24988, 6204, 3488, 39433, 34766, 46094, 19775, 23875, 40943, 11285, 6183, 24054, 25594, 24890, 46352, 16946, 36376, 18046, 45910, 1271, 9684, 42232, 14326, 5629, 1966]
-    secrets = scheme.setSecret(secrets)
+    def changeSecret(self, sec = []):
+        if len(sec) == 0:
+            self.scheme.generateSecret()
+        else:
+            self.scheme.setSecret(sec)
+        return self.scheme.reveal()
 
-    comm = [(43254, 1), (40858, 1), (30679, 0), (21656, 1), (38196, 0), (35191, 1) , (40405, 1), (17899, 0), (10418, 0), (38617, 1), (31641, 0), (41633, 0), (48182, 0),(9506, 0), (37603, 1), (24082, 1)]
-    print(f"COMMITMENTS : {comm}")
+    def getSecret(self):
+        return self.scheme.reveal()
 
-    trueString = verifier.decode(secrets, comm)
-    print(trueString)
+    def solve(self, sec = [], comm = []):
+        decoded = self.verifier.decode(sec, comm)
+        return decoded
+
+    def create(self, data = ""):
+        data = str(data)
+        commitments = self.scheme.commit(data)
+        return commitments

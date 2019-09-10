@@ -1,5 +1,5 @@
 import random
-import bbs
+from ZeroKnowledge import bbs
 
 class CommitmentScheme(object):
     def __init__(self, oneWayPermutation, hardcorePredicate, securityParameter):
@@ -67,9 +67,11 @@ class BBSStringCommitmentScheme(CommitmentScheme):
         self.secret = [x.secret for x in self.schemes]
         return self.secret
 
-    def commit(self, integer):
-        # .zfill(len(self.schemes))
-        binaryString = ''.join("0" + (format(ord(x), 'b')) for x in str(integer))
+    def commit(self, data):
+        binaryString = ""
+        for ch in str(data):
+            chInBin = format(ord(ch), 'b').zfill(8)
+            binaryString += str(chInBin)
         bits = [int(char) for char in binaryString]
         return [scheme.commit(bit) for scheme, bit in zip(self.schemes, bits)]
 
@@ -102,10 +104,19 @@ if __name__ == "__main__":
     securityParameter = 10
     oneWayPerm = bbs.bbs(securityParameter)
     hardcorePred = bbs.parity
-    scheme = BBSStringCommitmentScheme(100, oneWayPerm, hardcorePred)
-    verifier = BBSStringCommitmentVerifier(100, oneWayPerm, hardcorePred)
+    scheme = BBSStringCommitmentScheme(512, oneWayPerm, hardcorePred)
+    verifier = BBSStringCommitmentVerifier(512, oneWayPerm, hardcorePred)
 
-    tc = ["hello", "hi"]
+    data = {
+    "fruits":[
+        "apple",
+        "banana"
+        ]
+    }
+
+    data = str(data)
+
+    tc = ["hello", data]
 
     for string in tc:
 

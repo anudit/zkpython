@@ -1,8 +1,8 @@
-from primality import probablyPrime
+from ZeroKnowledge import primality
 import random
 
 def goodPrime(p):
-    return p % 4 == 3 and probablyPrime(p, accuracy=100)
+    return p % 4 == 3 and primality.probablyPrime(p, accuracy=100)
 
 def findGoodPrime(numBits=512):
     candidate = 1
