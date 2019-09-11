@@ -17,8 +17,8 @@ You're ready to go.
 
 ## Usage
 
-Functions | Definition | Params | Returns | Examples |
---- | --- | --- | --- | ---
+Functions | Definition | Params | Returns
+--- | --- | --- | ---
 `changeSecret()` | Allows you to add your custom secret| secret = An array of secret numbers | secret
 `getSecret()` | Lets you view the current secret | None | secret
 `create()` | Lets you create a ZK-proof of a String | data = A string of data | Commitments of the proof
